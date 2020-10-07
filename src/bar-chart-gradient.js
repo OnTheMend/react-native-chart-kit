@@ -11,36 +11,42 @@ class BarChart extends AbstractChart {
     return barPercentage;
   };
 
+  renderStop = (condition, offset) => {
+    let localOffset = offset === 2 ? 1 : offset;
+    if (condition) {
+      return <Stop offset={localOffset.toString()} stopColor={offset === 0 ? '#1CBA66' : (offset === 1 ? '#39E11C' : '#FFED47')} />
+    }
+  }
+
   renderBars = config => {
     const { data, width, height, paddingTop, paddingRight } = config
     const baseHeight = this.calcBaseHeight(data, height)
     return data.map((x, i) => {
       const barHeight = this.calcHeight(x, data, height)
       const barWidth = 10
+      const exCurBarData = this.props.exercisesChartInfo;
+      if (!exCurBarData || !Array.isArray(exCurBarData) || exCurBarData.length <= 0) return null
+      let firstStConColor = exCurBarData && exCurBarData[i] && exCurBarData[i].length > 0 && exCurBarData[i][0] > 0 ? true : false;
+      let secondStConColor = exCurBarData && exCurBarData[i] && exCurBarData[i].length > 0 && exCurBarData[i][0] > 0 ? true : false;
+      let thirdStConColor = exCurBarData && exCurBarData[i] && exCurBarData[i].length > 0 && exCurBarData[i][0] > 0 ? true : false && exCurBarData[i][2] && exCurBarData[i][1] <= 0 ? true : false;
       return (
         <G>
           <Defs>
-            <LinearGradient id="path"
-              x1="0" y1="100%" x2="0" y2="0">
-              <Stop offset="0" stopColor={'#1CBA66'} />
-              <Stop offset="2" stopColor={'#39E11C'} />
-              <Stop offset="3" stopColor={'#FFED47'} />
-              <Stop offset="1" stopColor={'#FFED47'} />
-            </LinearGradient>
-          </Defs>
-          <Defs>
-            <LinearGradient id="path_green"
-              x1="0" y1="100%" x2="0" y2="0">
-              <Stop offset="1" stopColor={'#39E11C'} />
-              <Stop offset="0" stopColor={'#1CBA66'} />
-            </LinearGradient>
-          </Defs>
-          <Defs>
-            <LinearGradient id="path_yellow"
-              x1="0" y1="100%" x2="0" y2="0">
-              <Stop offset="0" stopColor={'#FFED47'} />
-              <Stop offset="1" stopColor={'#FFED47'} />
-            </LinearGradient>
+            {firstStConColor || secondStConColor || thirdStConColor ?
+              <LinearGradient id="path"
+                x1="0" y1="100%" x2="0" y2="0">
+                {this.renderStop(firstStConColor, 0)}
+                {this.renderStop(secondStConColor, 1)}
+                {this.renderStop(thirdStConColor, 2)}
+                {/* {renderStop(firstStConColor, 0)} */}
+                {/* {firstStConColor && <Stop offset="1" stopColor={'#39E11C'} />} */}
+                {/* {secondStConColor && <Stop offset="1" stopColor={'#1CBA66'} />} */}
+                {/* {thirdStConColor && <Stop offset="2" stopColor={'#FFED47'} />} */}
+                {/* <Stop offset="1" stopColor={'#39E11C'} />
+              <Stop offset="2" stopColor={'#FFED47'} />
+              <Stop offset="0" stopColor={'#FFED47'} />  */}
+              </LinearGradient> : null
+            }
           </Defs>
           <Rect
             key={Math.random()}
@@ -56,7 +62,7 @@ class BarChart extends AbstractChart {
             rx={5}
             width={barWidth}
             height={(Math.abs(barHeight) / 4) * 3}
-            fill={i === 1 || i === 4 ? "url(#path_green)" : (i === 5 ? "url(#path_yellow)" : "url(#path)")}
+            fill={"url(#path)"}
           >
           </Rect>
         </G>
