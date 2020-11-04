@@ -91,7 +91,7 @@ class BarChart extends AbstractChart {
           fontSize="12"
           textAnchor="middle"
         >
-          {data[i]}
+          {parseFloat(data[i]) !== 0 && data[i]}
         </Text>
       );
     });
