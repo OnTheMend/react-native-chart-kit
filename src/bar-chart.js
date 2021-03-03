@@ -131,7 +131,7 @@ class BarChart extends AbstractChart {
           fontWeight="700"
           fill={'#9BA1AE'}
         >
-          {parseInt(yLabel) !== 0 && parseInt(yLabel) + 'k'}
+          {parseInt(yLabel) !== 0 && parseInt(yLabel)}
         </Text>
       )
     })
